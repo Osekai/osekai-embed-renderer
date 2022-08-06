@@ -14,10 +14,8 @@ def load_template(name):
     path = "templates/" + name
     with open(path + "/index.html", "r") as f:
         html = f.read()
-    with open(path + "/main.css", "r") as f:
-        css = f.read()
 
-    return {"html": html, "css": css, "path": path}
+    return {"html": html, "path": path}
 
 
 def render_template(html, css, usetemplate=True):
