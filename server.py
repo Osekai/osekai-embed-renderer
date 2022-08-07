@@ -8,7 +8,7 @@ import datetime
 import requests
 import json
 from html2image import Html2Image
-hti = Html2Image()
+hti = Html2Image(custom_flags="--headless --crash-dumps-dir=/tmp")
 hti.temp_path = "./temp"
 
 def load_template(name):
