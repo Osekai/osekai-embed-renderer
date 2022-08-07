@@ -10,8 +10,6 @@ import json
 from html2image import Html2Image
 hti = Html2Image()
 hti.temp_path = "./temp"
-hti.custom_flags = "--disk-cache-dir=./temp --user-data-dir=./temp --crash-dumps-dir=./temp";
-
 
 def load_template(name):
     html = ""
