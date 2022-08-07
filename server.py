@@ -5,8 +5,8 @@ import time
 import os
 import textwrap
 import datetime
-import imgkit
-
+from html2image import Html2Image
+hti = Html2Image()
 
 def load_template(name):
     html = ""
@@ -14,17 +14,20 @@ def load_template(name):
     path = "templates/" + name
     with open(path + "/index.html", "r") as f:
         html = f.read()
+    
+    with open("templates/template.css", "r") as f:
+        css = f.read()
 
-    return {"html": html, "path": path}
+    with open(path + "/main.css", "r") as f:
+        css += f.read()
+
+    return {"html": html, "path": path, "css": css}
 
 
 def render_template(html, css, usetemplate=True):
     timestamp = time.time()
-    path = "temp/temp_" + str(timestamp) + ".png"
-    csstouse = [css, "templates/template.css"]
-    if(usetemplate == False):
-        csstouse = [css]
-    imgkit.from_string(html, path, css=csstouse)
+    path = "temp_" + str(timestamp) + ".png"
+    hti.screenshot(html_str=html, css_str=css, save_as=path, size=(1280, 720))
     return path
 
 def repl_var(html, vars):
@@ -41,26 +44,13 @@ class Handler(BaseHTTPRequestHandler):
     def template_medals(self, template):
         name = template["name"]
         template = load_template(name)
-        vars = [["medal_icon", ""], ["medal_name", ""], 
-        ["medal_description", ""], ["medal_hint", ""], ["medal_solution", ""], ["accent", "255, 102, 170"]]
+        vars = [["medal_icon", "test"], ["medal_name", "test"], 
+        ["medal_description", "test"], ["medal_hint", "test"], ["medal_solution", "test"], ["accent", "255, 102, 170"]]
         template["html"] = repl_var(template['html'], vars);
-        rendered = render_template(template["html"], template["path"] + "/main.css", True)
-        Handler.respond(rendered, self)
-    def template_test(self, template):
-        name = template["name"]
-        template = load_template(name)
-        # <TEXT>
-        # TODO: clean this up in a more flexible way
-        tim = time.localtime()
-        current_time = time.strftime("%H:%M:%S", tim)
-        vars = [["TIME", current_time], ["TEST", "owo"]]
-        template["html"] = repl_var(template['html'], vars);
-        # </>
-        rendered = render_template(
-            template["html"], template["path"] + "/main.css", False)
+        rendered = render_template(template["html"], template["css"])
         Handler.respond(rendered, self)
 
-    templates = [{"name": "test", "def": template_test}, {"name": "medals", "def":template_medals}]
+    templates = [{"name": "medals", "def":template_medals}]
 
     def do_GET(self):
         path = list(filter(None, self.path.split("/")))
