@@ -9,6 +9,7 @@ import requests
 import json
 from html2image import Html2Image
 hti = Html2Image()
+hti.temp_path = "./temp"
 
 
 def load_template(name):
