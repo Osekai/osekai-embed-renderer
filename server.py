@@ -27,13 +27,25 @@ def render_template(html, css, usetemplate=True):
     imgkit.from_string(html, path, css=csstouse)
     return path
 
+def repl_var(html, vars):
+    for var in vars:
+        html = html.replace("{" + var[0] + "}", str(var[1]));
+    return html;
 
 class Handler(BaseHTTPRequestHandler):
     def respond(path, self):
         with open(path, 'rb') as file:
             self.wfile.write(file.read())
         os.remove(path)
-
+    
+    def template_medals(self, template):
+        name = template["name"]
+        template = load_template(name)
+        vars = [["medal_icon", ""], ["medal_name", ""], 
+        ["medal_description", ""], ["medal_hint", ""], ["medal_solution", ""], ["accent", "255, 102, 170"]]
+        template["html"] = repl_var(template['html'], vars);
+        rendered = render_template(template["html"], template["path"] + "/main.css", True)
+        Handler.respond(rendered, self)
     def template_test(self, template):
         name = template["name"]
         template = load_template(name)
@@ -41,13 +53,14 @@ class Handler(BaseHTTPRequestHandler):
         # TODO: clean this up in a more flexible way
         tim = time.localtime()
         current_time = time.strftime("%H:%M:%S", tim)
-        template["html"] = template["html"].replace(
-            "{TIME}", str(current_time))
+        vars = [["TIME", current_time], ["TEST", "owo"]]
+        template["html"] = repl_var(template['html'], vars);
         # </>
         rendered = render_template(
             template["html"], template["path"] + "/main.css", False)
         Handler.respond(rendered, self)
-    templates = [{"name": "test", "def": template_test}]
+
+    templates = [{"name": "test", "def": template_test}, {"name": "medals", "def":template_medals}]
 
     def do_GET(self):
         path = list(filter(None, self.path.split("/")))

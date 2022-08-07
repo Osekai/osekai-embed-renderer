@@ -1,0 +1,44 @@
+.medalinfo_top {
+    padding: 0px 89px;
+    height: 306px;
+    display: flex;
+    align-items: center;
+    width: 1280px;
+}
+
+.medalinfo_top_image {
+    margin-left: auto;
+}
+
+.medalinfo_top_image img {
+    height: 200px;
+}
+
+.medalinfo_top_texts h1 {
+    font-weight: 900;
+    font-size: 60px;
+}
+
+.medalinfo_top_texts h2 {
+    font-size: 40px;
+}
+
+.medalinfo_top_texts h3 {
+    font-size: 35px;
+    opacity: 0.5;
+    font-weight: 100;
+}
+
+.medalinfo_bottom {
+    height: calc(720px - 306px);
+    background: linear-gradient(180deg, rgba(17, 17, 17, 0.675) 0%, rgba(17, 17, 17, 0.9) 59.37%);
+    border-radius: 20px 20px 0px 0px;
+    padding: 50px 89px;
+}
+
+.medalinfo_bottom p {
+    font-weight: 400;
+    font-size: 35px;
+    line-height: 39px;
+    color: rgba(255, 255, 255, 0.8);
+}
